@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Myways</title>
+</head>
+
+<style>
+   
+</style>
+<body>
+   <div id=""container>
+    <form id="form">
+        <input type="text" placeholder="Name" id="name" required />
+        <input id="email" type="text" placeholder="Email" required/>
+        <input type="number" id="phone" placeholder="Phone Number" required/>
+        <input type="submit" />
+    </form>
+
+   </div>
+</body>
+<script>
+    let form = document.getElementById("form")
+    form.addEventListener("submit",formSubmit)
+
+
+    function getUsers(){
+        fetch("https://json-data-2yj8.onrender.com/users").then(res=>res.json()).then(res=>localStorage.setItem("users",JSON.stringify(res)))
+    }
+    getUsers()
+    
+
+    function formSubmit(){
+        event.preventDefault()
+        console.log("form")
+        let users = JSON.parse(localStorage.getItem("users"))||[]
+        let data ={
+            name:form.name.value,
+            email:form.email.value,
+            phone:form.phone.value
+        }
+        let {name,email,phone} = data
+        console.log(data)
+        let valid = users.find(e=>e.email==email)
+        if(valid){
+          alert("user Found")
+        }else{
+            postData(data)
+
+        }
+    }
+
+    function postData(data){
+        fetch("https://json-data-2yj8.onrender.com/users",{
+            method:"POST",
+            body:JSON.stringify(data),
+            headers:{
+                "Content-Type":"application/json"
+            }
+        }).then(res=>alert("User Created Successfully")).catch(err=>alert("something went wrong please try again"))
+    }
+</script>
+</html>
